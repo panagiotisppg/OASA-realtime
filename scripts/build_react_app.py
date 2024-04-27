@@ -14,6 +14,11 @@ def createReactAssets( source, target, env ):
         shutil.rmtree(data_dir_path)
     print('Rename: Creating an empty data directory ' + data_dir_path)
     os.mkdir(data_dir_path)
+
+    # add json to it
+    with open(data_dir_path+'/data.json', 'w') as f:
+        f.write("{\n    \"setup\": false,\n    \"stops\": []\n}")
+
     # Build the react web application
     react_proj_dir = "react-websocket-client"
     os.chdir(react_proj_dir)
