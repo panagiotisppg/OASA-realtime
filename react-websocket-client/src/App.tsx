@@ -1,47 +1,54 @@
-import "./App.css";
-import { IMessageEvent, w3cwebsocket } from "websocket";
-import { useState, useEffect, useRef, useCallback } from "react";
-import Button from "@mui/material/Button";
+import React, { useState, useEffect, useRef } from 'react';
+import { w3cwebsocket as W3CWebSocket } from 'websocket';
+import './App.css';
 
-function App() {
-  const websocket = useRef<w3cwebsocket | null>(null);
-  const [LED, setLED] = useState(false);
+const App: React.FC = () => {
+  const [selectedFile, setSelectedFile] = useState<File>();
+  const [client, setClient] = useState<W3CWebSocket>();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const submitInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    websocket.current = new w3cwebsocket("ws://192.168.2.1/ws");
-    websocket.current.onmessage = (message: IMessageEvent) => {
-      const dataFromServer = JSON.parse(message.data.toString());
-      if (dataFromServer.type === "message") {
-        setLED(dataFromServer.LED);
-      }
-    };
-    return () => websocket.current?.close();
+    const client = new W3CWebSocket('ws://your-esp32-server-address');
+    setClient(client);
   }, []);
 
-  const sendUpdate = useCallback(({ led }: { led: boolean }) => {
-    websocket.current?.send(
-      JSON.stringify({
-        type: "message",
-        LED: led,
-      })
-    );
-  }, []);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedFile(event.target.files ? event.target.files[0] : undefined);
+  };
 
-  const toggleLed = useCallback(() => sendUpdate({ led: !LED }), [LED, sendUpdate]);
+  const handleFormSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (client && selectedFile) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const fileData = event.target?.result;
+        if (typeof fileData === 'string') {
+          client.send(fileData);
+        }
+      };
+      reader.readAsText(selectedFile);
+    }
+  };
 
   return (
-    <div className="centered">
-      <div className="wrapper">
-        <h1>
-          <span>Currently </span>
-          <span>{LED ? "ON" : "OFF"}</span>
-        </h1>
-        <Button variant="contained" onClick={toggleLed}>
-          {LED ? "Turn Off" : "Turn On"}
-        </Button>
-      </div>
+    <div className="app">
+      <h1>Upload Settings</h1>
+      <p>
+        <b>Instructions:</b> After selecting your stops and downloading your data.json from <a href='https://oasa.ppdms.gr'>oasa.ppdms.gr</a>, please select it on the drop-down menu here and press send!
+      </p>
+      <form className="form" onSubmit={handleFormSubmit}>
+        <input id="file" ref={fileInputRef} className="input" type="file" accept=".json" onChange={handleFileChange} />
+        
+        <input id="submit" ref={submitInputRef} className="submit" type="submit" />
+        
+        <div className="buttons">
+        <label htmlFor="file" className="button">Choose file</label>
+          <label htmlFor="submit" className="button" onClick={() => submitInputRef.current?.click()}>Send</label>
+        </div>
+      </form>
     </div>
   );
-}
+};
 
 export default App;
