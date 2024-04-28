@@ -9,7 +9,9 @@ export default defineConfig({
     outDir: '../data/www',
   rollupOptions: {
         output : {
-          chunkFileNames: "[name].js"
+          chunkFileNames: "[name].js",
+          assetFileNames: "[name][extname]",
+          entryFileNames: "[name].js"
         }
     }
   }
