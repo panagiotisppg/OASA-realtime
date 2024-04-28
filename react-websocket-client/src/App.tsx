@@ -9,7 +9,7 @@ const App: React.FC = () => {
   const submitInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const client = new W3CWebSocket('ws://your-esp32-server-address');
+    const client = new W3CWebSocket('ws://192.168.2.1/ws');
     setClient(client);
   }, []);
 

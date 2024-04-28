@@ -5,7 +5,7 @@
 #include <ESPAsyncWebServer.h>
 #include "wsEventHandler.h"
 
-#define SSID "ESP32 SoftAP" // This is the SSID that ESP32 will broadcast
+#define SSID "OASA Realtime" // This is the SSID that ESP32 will broadcast
 // #define CAPTIVE_DOMAIN "http://domain-name-to-show" // This is the SSID that ESP32 will broadcast
 // Uncomment the following line to enable password in the wifi acces point
 // #define PASSWORD "12345678" // password should be atleast 8 characters to make it work
