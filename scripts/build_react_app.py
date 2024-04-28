@@ -33,4 +33,4 @@ def createReactAssets( source, target, env ):
         print(f"Error building react application in ./{react_proj_dir}")
         return    
     os.chdir('..')
-env.AddPreAction( '$BUILD_DIR/spiffs.bin', createReactAssets )
+env.AddPreAction( '$BUILD_DIR/littlefs.bin', createReactAssets )

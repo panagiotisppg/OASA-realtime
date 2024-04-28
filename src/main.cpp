@@ -4,7 +4,7 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include <LiquidCrystal_I2C.h>
-#include <SPIFFS.h>
+#include <LittleFS.h>
 #include <FS.h>
 #include <DNSServer.h>
 #include <ESPAsyncWebServer.h>
@@ -12,7 +12,7 @@
 
 // FIELDS / HELPERS FOR SETUP MODE
 
-#define SSID "OASA Realtime" // This is the SSID that ESP32 will broadcast
+#define SSID "OASA" // This is the SSID that ESP32 will broadcast
 // #define CAPTIVE_DOMAIN "http://domain-name-to-show" // This is the SSID that ESP32 will broadcast
 // Uncomment the following line to enable password in the wifi acces point
 // #define PASSWORD "12345678" // password should be atleast 8 characters to make it work
@@ -222,11 +222,11 @@ void setup()
 {
   Serial.begin(115200);
 
-  SPIFFS.begin();
-  File file = SPIFFS.open("/data.json", "r");
+  LittleFS.begin();
+  File file = LittleFS.open("/data.json", "r");
 
   deserializeJson(doc, file);
-
+  
   status = doc["setup"] ? NORMAL : SETUP;
 
   file.close();
@@ -244,7 +244,7 @@ void setup()
     websocket.onEvent(wsEventHandler);
     server.addHandler(&websocket);
     // setup statuc web server
-    server.serveStatic("/", SPIFFS, "/www/")
+    server.serveStatic("/", LittleFS, "/www/")
         .setDefaultFile("index.html");
     // Captive portal to keep the client
     server.onNotFound(redirectToIndex);
