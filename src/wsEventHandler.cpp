@@ -1,7 +1,8 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <ESPAsyncWebServer.h>
-#include <LittleFS.h>
+#include <SPIFFS.h>
+#include <FS.h>
 #include "wsEventHandler.h"
 
 AsyncWebSocketClient *clients[16];
@@ -13,9 +14,9 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len)
   if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT)
   {
     data[len] = 0;
-    if (LittleFS.begin())
+    if (SPIFFS.begin())
     {
-      File file = LittleFS.open("/data.json", "w");
+      File file = SPIFFS.open("/data.json", "w");
       if (file)
       {
         file.write(data, len);
@@ -24,9 +25,9 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len)
           Serial.printf("%c", data[i]);
         }
         file.close();
-        LittleFS.end();
-        File file = LittleFS.open("/data.json", "r");
-        LittleFS.begin();
+        SPIFFS.end();
+        File file = SPIFFS.open("/data.json", "r");
+        SPIFFS.begin();
         if (file)
         {
           while (file.available())

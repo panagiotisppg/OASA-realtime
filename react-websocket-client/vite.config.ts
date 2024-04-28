@@ -7,5 +7,10 @@ export default defineConfig({
   build: {
     emptyOutDir: true,
     outDir: '../data/www',
-  },
+  rollupOptions: {
+        output : {
+          chunkFileNames: "[name].js"
+        }
+    }
+  }
 })

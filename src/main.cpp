@@ -4,7 +4,8 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include <LiquidCrystal_I2C.h>
-#include <LittleFS.h>
+#include <SPIFFS.h>
+#include <FS.h>
 #include <DNSServer.h>
 #include <ESPAsyncWebServer.h>
 #include "wsEventHandler.h"
@@ -221,8 +222,8 @@ void setup()
 {
   Serial.begin(115200);
 
-  LittleFS.begin();
-  File file = LittleFS.open("/data.json", "r");
+  SPIFFS.begin();
+  File file = SPIFFS.open("/data.json", "r");
 
   deserializeJson(doc, file);
 
@@ -243,7 +244,7 @@ void setup()
     websocket.onEvent(wsEventHandler);
     server.addHandler(&websocket);
     // setup statuc web server
-    server.serveStatic("/", LittleFS, "/www/")
+    server.serveStatic("/", SPIFFS, "/www/")
         .setDefaultFile("index.html");
     // Captive portal to keep the client
     server.onNotFound(redirectToIndex);
