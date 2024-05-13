@@ -19,7 +19,7 @@ There are two actions required to upload this to your ESP32.
 ## Configuration
 
 1. Go to https://oasa.ppdms.gr and follow the instructions to download a JSON file with the stops you are interested in and your WiFi credentials.
-2. Power on the ESP and log in to it's WiFi AP: you will be redirected to a captive portal where you can upload the JSON. After uploading, the display will start working automatically.
+2. Power on the ESP and log in to its WiFi AP: you will be redirected to a captive portal where you can upload the JSON. After uploading, the display will start working automatically.
 
 ## TODO
 1. Add reset button functionality to reupload settings without reflashing (trivial)
